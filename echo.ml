@@ -7,23 +7,23 @@ let create_socket () =
   listen sock 10;
   return sock
 
-let handle_message ic oc =
-  Lwt_io.read_line_opt ic >>= fun msg_ ->
-  let ret = match msg_ with
-  | Some msg -> (match msg with
+let rec handle_message ic oc () =
+  Lwt_io.read_line_opt ic >>= fun msg ->
+  match msg with
+  | Some msg ->
+    let ret = match msg with
     | "ping" -> "pong"
-    | _ -> "unsupported command: " ^ msg)
-  | None -> "close" in
-  return ret
+    | _ -> "unsupported command: " ^ msg
+    in Lwt_io.write_line oc ret >>= handle_message ic oc
+  | None -> return_unit
 
 let handle_connection conn =
   let fd, _ = conn in
   let ic = Lwt_io.of_fd Lwt_io.Input fd in
   let oc = Lwt_io.of_fd Lwt_io.Output fd in
   print_endline "conn";
-  handle_message ic oc >>= fun ret ->
-  print_endline ret;
-  Lwt_io.write_line oc ret
+  Lwt.ignore_result (handle_message ic oc ());
+  return_unit
 
 let create_server sock =
   let rec serve () =
