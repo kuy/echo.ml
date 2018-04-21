@@ -1,0 +1,7 @@
+lib: [
+  "_build/install/default/lib/echo/META" {"META"}
+  "_build/install/default/lib/echo/opam" {"opam"}
+]
+bin: [
+  "_build/install/default/bin/echo" {"echo"}
+]
