@@ -16,8 +16,7 @@ let handle_message ic oc =
   | None -> "close" in
   return ret
 
-let create_server sock =
-  Lwt_unix.accept sock >>= fun conn ->
+let handle_connection conn =
   let fd, _ = conn in
   let ic = Lwt_io.of_fd Lwt_io.Input fd in
   let oc = Lwt_io.of_fd Lwt_io.Output fd in
@@ -26,5 +25,11 @@ let create_server sock =
   print_endline ret;
   Lwt_io.write_line oc ret
 
+let create_server sock =
+  let rec serve () =
+    Lwt_unix.accept sock >>= handle_connection >>= serve
+  in serve
+
 let () =
-  Lwt_main.run ((create_socket ()) >>= create_server)
+  Lwt_main.run ((create_socket ()) >>= fun sock ->
+    let serve = create_server sock in serve ())
