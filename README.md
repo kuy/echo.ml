@@ -5,7 +5,9 @@ Multi-client echo server written in OCaml with LWT.
 ## Environments
 
 - ocaml `4.06.1`
-- jbuilder `1.0+beta19.1`
+- opam `1.2.2`
+- dune `1.0+beta20`
+- lwt `4.0.1`
 
 ## Build
 
