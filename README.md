@@ -1,6 +1,11 @@
 # echo.ml
 
-Echo server written in OCaml with LWT.
+Multi-client echo server written in OCaml with LWT.
+
+## Environments
+
+- ocaml `4.06.1`
+- jbuilder `1.0+beta19.1`
 
 ## Build
 
